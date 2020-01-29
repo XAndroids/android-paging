@@ -20,8 +20,8 @@ import androidx.lifecycle.LiveData
 import androidx.paging.PagedList
 
 /**
- * RepoSearchResult from a search, which contains LiveData<List<Repo>> holding query data,
- * and a LiveData<String> of network error state.
+ * 一次搜索的RepoSearchResult，它包含了保存查询数据的LiveData<List<Repo>>,
+ * 和网络错误状态的LiveData<String>
  */
 data class RepoSearchResult(
     val data: LiveData<PagedList<Repo>>,

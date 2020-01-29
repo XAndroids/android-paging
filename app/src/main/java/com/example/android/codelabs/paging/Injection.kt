@@ -26,14 +26,13 @@ import com.example.android.codelabs.paging.ui.ViewModelFactory
 import java.util.concurrent.Executors
 
 /**
- * Class that handles object creation.
- * Like this, objects can be passed as parameters in the constructors and then replaced for
- * testing, where needed.
+ * 处理对象创建的类
+ * 像这样，对象作为参数在构造函数中传递，然后根据需要替换它们进行测试
  */
 object Injection {
 
     /**
-     * Creates an instance of [GithubLocalCache] based on the database DAO.
+     * 使用数据Dao创建GithubLocalCache实例
      */
     private fun provideCache(context: Context): GithubLocalCache {
         val database = RepoDatabase.getInstance(context)
@@ -41,16 +40,14 @@ object Injection {
     }
 
     /**
-     * Creates an instance of [GithubRepository] based on the [GithubService] and a
-     * [GithubLocalCache]
+     * 基于GithubService和GithubLocalCache，创建GithubRepository实例
      */
     private fun provideGithubRepository(context: Context): GithubRepository {
         return GithubRepository(GithubService.create(), provideCache(context))
     }
 
     /**
-     * Provides the [ViewModelProvider.Factory] that is then used to get a reference to
-     * [ViewModel] objects.
+     * 提供ViewModelProvider.Factory，然后用于获取ViewModel对象引用
      */
     fun provideViewModelFactory(context: Context): ViewModelProvider.Factory {
         return ViewModelFactory(provideGithubRepository(context))

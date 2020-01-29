@@ -26,9 +26,8 @@ import com.example.android.codelabs.paging.db.GithubLocalCache
 import com.example.android.codelabs.paging.model.Repo
 
 /**
- * This boundary callback gets notified when user reaches to the edges of the list for example when
- * the database cannot provide any more data.
- **/
+ * 边界回调当用户达到列表边界的时候获取通知，例如数据库没有提供更多的数据
+ */
 class RepoBoundaryCallback(
         private val query: String,
         private val service: GithubService,
@@ -36,30 +35,32 @@ class RepoBoundaryCallback(
 ) : PagedList.BoundaryCallback<Repo>() {
 
     companion object {
+        //请求每一页的大小
         private const val NETWORK_PAGE_SIZE = 50
     }
 
-    // keep the last requested page. When the request is successful, increment the page number.
+    // 保存最后的请求页数。如果请求是成功，增加页数。
     private var lastRequestedPage = 1
 
+    // 网络错误LiveDAta
     private val _networkErrors = MutableLiveData<String>()
-    // LiveData of network errors.
     val networkErrors: LiveData<String>
         get() = _networkErrors
 
-    // avoid triggering multiple requests in the same time
+    // 避免同一时间出发多个请求
     private var isRequestInProgress = false
 
     /**
-     * Database returned 0 items. We should query the backend for more items.
+     * 数据返回0个item。我们应该在后台查询更多的item
      */
     override fun onZeroItemsLoaded() {
         Log.d("RepoBoundaryCallback", "onZeroItemsLoaded")
+        //6.当刚开始展示，或者onItemAtEndLoaded到边界的时候，请求网络数据
         requestAndSaveData(query)
     }
 
     /**
-     * When all items in the database were loaded, we need to query the backend for more items.
+     * 当在数据库中的所有ite被加载，我们需要在后台查询更多的item
      */
     override fun onItemAtEndLoaded(itemAtEnd: Repo) {
         Log.d("RepoBoundaryCallback", "onItemAtEndLoaded")
@@ -71,6 +72,7 @@ class RepoBoundaryCallback(
 
         isRequestInProgress = true
         searchRepos(service, query, lastRequestedPage, NETWORK_PAGE_SIZE, { repos ->
+            //网络请求成功，先缓存保存
             cache.insert(repos) {
                 lastRequestedPage++
                 isRequestInProgress = false

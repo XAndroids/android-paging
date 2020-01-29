@@ -23,7 +23,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.android.codelabs.paging.model.Repo
 
 /**
- * Adapter for the list of repositories.
+ * 仓库列表适配器
+ * PagedListAdapter：分页异步加载，Diff更新
  */
 class ReposAdapter : PagedListAdapter<Repo, RecyclerView.ViewHolder>(REPO_COMPARATOR) {
 
@@ -39,6 +40,7 @@ class ReposAdapter : PagedListAdapter<Repo, RecyclerView.ViewHolder>(REPO_COMPAR
     }
 
     companion object {
+        //7.RecyclerView Diff机制，按照差异精准更新数据
         private val REPO_COMPARATOR = object : DiffUtil.ItemCallback<Repo>() {
             override fun areItemsTheSame(oldItem: Repo, newItem: Repo): Boolean =
                     oldItem.fullName == newItem.fullName

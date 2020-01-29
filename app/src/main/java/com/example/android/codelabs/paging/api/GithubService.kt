@@ -33,15 +33,15 @@ private const val TAG = "GithubService"
 private const val IN_QUALIFIER = "in:name,description"
 
 /**
- * Search repos based on a query.
- * Trigger a request to the Github searchRepo API with the following params:
- * @param query searchRepo keyword
- * @param page request page index
- * @param itemsPerPage number of repositories to be returned by the Github API per page
+ * 使用query查询repo
+ * 使用如下参数出发一个Github searchRepo API的请求
+ * @param query 搜索Repo关键字
+ * @param page 搜索页面索引
+ * @param itemsPerPage Github API每页返回的仓库数量
  *
- * The result of the request is handled by the implementation of the functions passed as params
- * @param onSuccess function that defines how to handle the list of repos received
- * @param onError function that defines how to handle request failure
+ * 请求结果通过参数传递的实现方法来处理
+ * @param onSuccess 定义如何处理获取的repo列表方法
+ * @param onError 定义如何处理请求失败的方法
  */
 fun searchRepos(
     service: GithubService,
@@ -79,11 +79,11 @@ fun searchRepos(
 }
 
 /**
- * Github API communication setup via Retrofit.
+ * 使用Retrofit和Github API通信
  */
 interface GithubService {
     /**
-     * Get repos ordered by stars.
+     * 获取repo按照星排序
      */
     @GET("search/repositories?sort=stars")
     fun searchRepos(

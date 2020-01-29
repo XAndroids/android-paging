@@ -20,7 +20,7 @@ import com.example.android.codelabs.paging.model.Repo
 import com.google.gson.annotations.SerializedName
 
 /**
- * Data class to hold repo responses from searchRepo API calls.
+ * 保存从searchRepo API调用返回的repo数据类
  */
 data class RepoSearchResponse(
     @SerializedName("total_count") val total: Int = 0,

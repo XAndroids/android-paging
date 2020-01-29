@@ -23,7 +23,7 @@ import android.content.Context
 import com.example.android.codelabs.paging.model.Repo
 
 /**
- * Database schema that holds the list of repos.
+ * 保存repos列表数据库模型
  */
 @Database(
         entities = [Repo::class],

@@ -21,7 +21,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.android.codelabs.paging.data.GithubRepository
 
 /**
- * Factory for ViewModels
+ * ViewModel的Factory
  */
 class ViewModelFactory(private val repository: GithubRepository) : ViewModelProvider.Factory {
 

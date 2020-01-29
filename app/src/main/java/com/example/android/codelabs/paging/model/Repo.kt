@@ -21,10 +21,9 @@ import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 /**
- * Immutable model class for a Github repo that holds all the information about a repository.
- * Objects of this type are received from the Github API, therefore all the fields are annotated
- * with the serialized name.
- * This class also defines the Room repos table, where the repo [id] is the primary key.
+ * Github repo不可变模型类，它包包含关于仓库的所有信息。
+ * 从Github API获取这个类型的对象，因此所有的字段使用序列化名称注释
+ * 这个类也定义了Room仓库表，其中仓库id是主键
  */
 @Entity(tableName = "repos")
 data class Repo(

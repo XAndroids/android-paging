@@ -22,8 +22,7 @@ import com.example.android.codelabs.paging.model.Repo
 import java.util.concurrent.Executor
 
 /**
- * Class that handles the DAO local data source. This ensures that methods are triggered on the
- * correct executor.
+ * 处理本地数据源Dao的类。确保方法在正确的执行器中被触发
  */
 class GithubLocalCache(
         private val repoDao: RepoDao,
@@ -31,7 +30,7 @@ class GithubLocalCache(
 ) {
 
     /**
-     * Insert a list of repos in the database, on a background thread.
+     * 向数据库中插入仓库列表，在后台线程
      */
     fun insert(repos: List<Repo>, insertFinished: () -> Unit) {
         ioExecutor.execute {
@@ -42,10 +41,9 @@ class GithubLocalCache(
     }
 
     /**
-     * Request a LiveData<List<Repo>> from the Dao, based on a repo name. If the name contains
-     * multiple words separated by spaces, then we're emulating the GitHub API behavior and allow
-     * any characters between the words.
-     * @param name repository name
+     * 使用仓库的名称，从Dao请求LiveData<List<Repo>>。如果名字包含多个词使用空格分隔，然后我们模拟GitHub API的
+     * 行为，允许单词之间有任何字符
+     * @param name 仓库名称
      */
     fun reposByName(name: String): DataSource.Factory<Int, Repo> {
         // appending '%' so we can allow other characters to be before and after the query string

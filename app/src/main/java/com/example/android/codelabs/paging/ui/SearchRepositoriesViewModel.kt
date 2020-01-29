@@ -26,30 +26,43 @@ import com.example.android.codelabs.paging.model.Repo
 import com.example.android.codelabs.paging.model.RepoSearchResult
 
 /**
- * ViewModel for the [SearchRepositoriesActivity] screen.
- * The ViewModel works with the [GithubRepository] to get the data.
+ * SearchRepositoriesActivity页面的ViewModel
+ * 这个ViewModel使用GithubRepository获取数据
  */
 class SearchRepositoriesViewModel(private val repository: GithubRepository) : ViewModel() {
 
+    //3.由于输入框变更qery，触发repository.search()返回repoResult
     private val queryLiveData = MutableLiveData<String>()
+    //Transformations.map()：对存储在LiveData对象中的值应用一个函数，并传递将结果传递到下游
     private val repoResult: LiveData<RepoSearchResult> = Transformations.map(queryLiveData) {
         repository.search(it)
     }
 
+    //switchMap()和map()一样，只是转发给最新的观察者；返回数据本身，不包装LiveData<>
+    //如queryLivaData多次修改，触发epository.search(it)，只会分发最后一次的变更
+    //
+    // 我怎么感觉用在次场景意义不大，it->it.data又不是耗时操作，理论上不会出现先后错序的问题
+    // 此处考虑使用map和switchmap应该考虑的是返回类型是否是LiveData
+    //
+    //参考：
+    // https://www.jianshu.com/p/5a82f14e1b8d
+    // https://blog.csdn.net/jdsjlzx/article/details/51730162
+    //2.repos和networkErrors观察repository.search()返回的数据
     val repos: LiveData<PagedList<Repo>> = Transformations.switchMap(repoResult) { it -> it.data }
     val networkErrors: LiveData<String> = Transformations.switchMap(repoResult) { it ->
         it.networkErrors
     }
 
     /**
-     * Search a repository based on a query string.
+     * 使用查询字符串搜索repository
      */
     fun searchRepo(queryString: String) {
+        //更新查询query字符串，从而发起查询请求
         queryLiveData.postValue(queryString)
     }
 
     /**
-     * Get the last query value.
+     * 获取最新查询的值
      */
     fun lastQueryValue(): String? = queryLiveData.value
 }

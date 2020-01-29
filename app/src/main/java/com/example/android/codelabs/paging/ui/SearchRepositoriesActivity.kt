@@ -41,17 +41,19 @@ class SearchRepositoriesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search_repositories)
 
-        // get the view model
+        //获取ViewModel
         viewModel = ViewModelProviders.of(this, Injection.provideViewModelFactory(this))
                 .get(SearchRepositoriesViewModel::class.java)
 
-        // add dividers between RecyclerView's row items
+        //RecyclerView行items之间添加分隔线，初始化列表适配器，并观察相关的列表数据
         val decoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         list.addItemDecoration(decoration)
-
         initAdapter()
+
+        //恢复查询query，并且发起初次请求
         val query = savedInstanceState?.getString(LAST_SEARCH_QUERY) ?: DEFAULT_QUERY
         viewModel.searchRepo(query)
+        //初始化输入框展示，和输入框输入状态监听
         initSearch(query)
     }
 
@@ -62,6 +64,7 @@ class SearchRepositoriesActivity : AppCompatActivity() {
 
     private fun initAdapter() {
         list.adapter = adapter
+        //1.观察viewModel中列表和空数据
         viewModel.repos.observe(this, Observer<PagedList<Repo>> {
             Log.d("Activity", "list: ${it?.size}")
             showEmptyList(it?.size == 0)
@@ -75,6 +78,7 @@ class SearchRepositoriesActivity : AppCompatActivity() {
     private fun initSearch(query: String) {
         search_repo.setText(query)
 
+        //监听输入框"查询"和"回车"等按键
         search_repo.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_GO) {
                 updateRepoListFromInput()
@@ -93,9 +97,13 @@ class SearchRepositoriesActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * 通过输入查询字段，更新列表
+     */
     private fun updateRepoListFromInput() {
         search_repo.text.trim().let {
             if (it.isNotEmpty()) {
+                //如果输入不为空，则滑动到列表第一行，搜索关键字，清空列表
                 list.scrollToPosition(0)
                 viewModel.searchRepo(it.toString())
                 adapter.submitList(null)
@@ -103,6 +111,9 @@ class SearchRepositoriesActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * 是否展示空列表
+     */
     private fun showEmptyList(show: Boolean) {
         if (show) {
             emptyList.visibility = View.VISIBLE
